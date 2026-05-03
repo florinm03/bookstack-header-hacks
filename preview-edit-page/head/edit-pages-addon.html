@@ -7,10 +7,6 @@
     }
 
     .quick-edit-btn {
-        position: absolute;
-        top: 10px;
-        right: 46px; 
-        z-index: 10;
         background: transparent;
         border: 1px solid var(--color-border);
         border-radius: 4px;
@@ -21,6 +17,18 @@
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .page-preview-container:not(:has(.custom-page-preview.is-open)):hover .quick-edit-btn {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .page-preview-container:has(.custom-page-preview.is-open) .quick-edit-btn {
+        opacity: 1;
+        visibility: visible;
     }
 
     .quick-edit-btn:hover {
@@ -37,10 +45,6 @@
     }
 
     .quick-cancel-btn {
-        position: absolute;
-        top: 10px;
-        right: 80px;
-        z-index: 10;
         background: transparent;
         border: 1px solid var(--color-border);
         border-radius: 4px;
@@ -51,6 +55,18 @@
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .page-preview-container:not(:has(.custom-page-preview.is-open)):hover .quick-cancel-btn {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .page-preview-container:has(.custom-page-preview.is-open) .quick-cancel-btn {
+        opacity: 1;
+        visibility: visible;
     }
 
     .quick-cancel-btn:hover {
@@ -111,14 +127,37 @@
             editBtn.className = 'quick-edit-btn title-action print-hidden';
             editBtn.title = "Quick Edit Markdown";
             editBtn.innerHTML = iconPencil;
-            container.appendChild(editBtn);
-
+            
             const cancelBtn = document.createElement('button');
             cancelBtn.className = 'quick-cancel-btn title-action print-hidden';
             cancelBtn.title = "Cancel";
             cancelBtn.innerHTML = iconX;
             cancelBtn.style.display = 'none';
-            container.appendChild(cancelBtn);
+
+            const actionsWrapper = container.querySelector('.page-preview-actions');
+            if (actionsWrapper) {
+                actionsWrapper.appendChild(editBtn);
+                actionsWrapper.appendChild(cancelBtn);
+            } else {
+                // Fallback if wrapper not found
+                container.appendChild(editBtn);
+                container.appendChild(cancelBtn);
+            }
+
+            // Check at startup if this is a markdown page
+            // If not, hide the edit button permanently, can't edit the wyztsfists page :))
+            fetch(url + '/edit')
+                .then(res => res.text())
+                .then(html => {
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const mdTextarea = doc.querySelector('textarea[name="markdown"]');
+                    if (!mdTextarea) {
+                        editBtn.style.display = 'none';
+                    }
+                })
+                .catch(() => {
+                    editBtn.style.display = 'none';
+                });
 
             let csrfToken = '';
             let pageTitle = '';
@@ -145,8 +184,8 @@
                         const titleInput = doc.querySelector('input[name="name"]');
 
                         if (!mdTextarea || !tokenInput || !titleInput) {
-                            alert('Markdown editor not found! This page might be using the WYSIWYG editor.');
-                            editBtn.innerHTML = iconPencil;
+                            // old editor, hide the edit button
+                            editBtn.style.display = 'none';
                             return;
                         }
 
