@@ -64,7 +64,7 @@ module-name/
 
 ### Disabling Individual Modules
 
-To disable a specific module, simply rename its folder (e.g., from `sort-tables-WYSIWYG` to `_sort-tables-WYSIWYG`). BookStack will ignore folders that don't follow the module naming convention. Or remove what you don't need after cloning the repository.
+To disable a specific module, simply rename its folder (e.g., from `sort-tables-WYSIWYG` to `_sort-tables-WYSIWYG`). BookStack will ignore folders that don't follow the module naming convention. Or manually remove what you don't need after cloning the repository. If you want this step automated, you can use the provided `setup.sh` script which will prompt you to select which modules to keep or remove.
 
 ## Requirements
 
