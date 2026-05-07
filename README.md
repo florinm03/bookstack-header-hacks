@@ -35,20 +35,20 @@ chmod +x setup.sh
 
 ## Available Modules
 
-| Module | Description |
-|--------|-------------|
-| [`header-anchor-link/`](header-anchor-link/) | Adds clickable anchor links to page headers. Hover over headers to see a link icon. Click to copy the section URL to your clipboard. |
-| [`image-gallery/`](image-gallery/) | Adds an image gallery with lightbox viewer. Provides an Insert Gallery button in the WYSIWYG editor to create responsive image grids with fullscreen viewing. |
-| [`LaTeX-support/`](LaTeX-support/) | Adds MathJax support for rendering LaTeX mathematical equations. Use `$...$` for inline math. |
+| Module | Description | Preview |
+|--------|-------------|---------|
+| [`header-anchor-link/`](header-anchor-link/) | Adds clickable anchor links to page headers. Hover over headers to see a link icon. Click to copy the section URL to your clipboard. | ![](pictures/Link.png)
+| [`image-gallery/`](image-gallery/) | Adds an image gallery with lightbox viewer. Provides an Insert Gallery button in the WYSIWYG editor to create responsive image grids with fullscreen viewing. | ![](pictures/Gallery.png)
+| [`LaTeX-support/`](LaTeX-support/) | Adds MathJax support for rendering LaTeX mathematical equations. Use `$...$` for inline math. | ![](pictures/LaTeX.png)
 | [`open-attachments/`](open-attachments/) | Opens attachments (especially PDFs) in a new browser tab instead of downloading them. |
-| [`pdf-embed/`](pdf-embed/) | Embeds PDF files directly in pages using pdf.js. Includes an Insert PDF button in the WYSIWYG editor. |
+| [`pdf-embed/`](pdf-embed/) | Embeds PDF files directly in pages using pdf.js. Includes an Insert PDF button in the WYSIWYG editor. | ![](pictures/PDF.png)
 | [`pdf-export-clean/`](pdf-export-clean/) | Hides revision and author information when viewing pages, making PDF exports cleaner without the metadata footer. |
-| [`preview-edit-page/`](preview-edit-page/) | Adds a preview button to the page editor, and enables quick-editing pages directly from the preview view. |
+| [`preview-edit-page/`](preview-edit-page/) | Adds a preview button to the page editor, and enables quick-editing pages directly from the preview view. | ![](pictures/Preview.png)
 | [`sort-tables-WYSIWYG/`](sort-tables-WYSIWYG/) | Makes tables sortable in the WYSIWYG editor. Double-click on a column header to sort by that column. |
 | [`sticky-table-heads/`](sticky-table-heads/) | Keeps table headers fixed at the top while scrolling, for tables taller than the viewport. |
-| [`toc-edit-mode/`](toc-edit-mode/) | Adds a table of contents to the page editor sidebar, showing all headings (h2-h6) for easy navigation while editing. |
+| [`toc-edit-mode/`](toc-edit-mode/) | Adds a table of contents to the page editor sidebar, showing all headings (h2-h6) for easy navigation while editing. | ![](pictures/TOC.png)
 | [`url-edit-contrast/`](url-edit-contrast/) | Improves URL highlight visibility in the WYSIWYG editor dark mode with a subtle dashed border. |
-| [`wc-n-wpm-info/`](wc-n-wpm-info/) | Displays word count, character count, and estimated reading time on each page. |
+| [`wc-n-wpm-info/`](wc-n-wpm-info/) | Displays word count, character count, and estimated reading time on each page. | ![](pictures/Time.png)
 | [`global-hacks/`](global-hacks/) | Miscellaneous global customizations that apply to all pages. |
 
 ## Module Structure
