@@ -1,13 +1,13 @@
 <!-- PDF Export Clean - Hides revision and author information when exporting to PDF -->
 
-<style>
-/* Hide text-muted elements (author, revision info) in page content */
+<style> 
+@media print { .entity-meta, .revision-info, .revision-history, .entity-meta-item { display: none !important; } }
+
 #page-show .text-muted {
   visibility: hidden;
 }
-
-/* But show them in table of contents/contents */
-.contents .text-muted {
+.contents .text-muted 
+{
   visibility: visible;
 }
 </style>

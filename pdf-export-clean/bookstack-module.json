@@ -1,5 +1,5 @@
 {
   "name": "pdf-export-clean",
   "description": "Hides revision and author information when viewing pages, making PDF exports cleaner without the metadata footer.",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

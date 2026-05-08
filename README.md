@@ -42,7 +42,7 @@ chmod +x setup.sh
 | [`LaTeX-support/`](LaTeX-support/) | Adds MathJax support for rendering LaTeX mathematical equations. Use `$...$` for inline math. | ![](pictures/LaTeX.png)
 | [`open-attachments/`](open-attachments/) | Opens attachments (especially PDFs) in a new browser tab instead of downloading them. |
 | [`pdf-embed/`](pdf-embed/) | Embeds PDF files directly in pages using pdf.js. Includes an Insert PDF button in the WYSIWYG editor. | ![](pictures/PDF.png)
-| [`pdf-export-clean/`](pdf-export-clean/) | Hides revision and author information when viewing pages, making PDF exports cleaner without the metadata footer. |
+| [`pdf-export-clean/`](pdf-export-clean/) | Hides revision and author information when viewing pages, making PDF exports cleaner without the metadata footer. | ![](pictures/Revision.png)
 | [`preview-edit-page/`](preview-edit-page/) | Adds a preview button to the page editor, and enables quick-editing pages directly from the preview view. | ![](pictures/Preview.png)
 | [`sort-tables-WYSIWYG/`](sort-tables-WYSIWYG/) | Makes tables sortable in the WYSIWYG editor. Double-click on a column header to sort by that column. |
 | [`sticky-table-heads/`](sticky-table-heads/) | Keeps table headers fixed at the top while scrolling, for tables taller than the viewport. |
