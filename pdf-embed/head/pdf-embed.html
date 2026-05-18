@@ -108,6 +108,56 @@ CORS: The PDF URL must point to a server that allows cross-origin requests.
 </style>
 <script type="text/javascript">
 
+  function addPdfEmbedButtonToSidebar(attachmentLinkBtn) {
+    if (!attachmentLinkBtn) return;
+
+    // Find the parent card and check if the attached file is a PDF
+    const cardDiv = attachmentLinkBtn.closest('[component="ajax-delete-row"]');
+    if (!cardDiv) return;
+    const fileName = cardDiv.querySelector('.py-s a')?.textContent || '';
+    if (!fileName.toLowerCase().endsWith('.pdf')) return;
+
+    const pdfEmbedBtn = document.createElement('button');
+    pdfEmbedBtn.type = 'button';
+    pdfEmbedBtn.title = 'Embed PDF on Cursor';
+    pdfEmbedBtn.className = 'drag-card-action text-center text-link';
+    pdfEmbedBtn.innerHTML = '<svg class="svg-icon" data-icon="file-pdf" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5zm3-1.5h-1v1h-1v-1h-1v-1h1v-1h1v1h1zM9 9.5h1v-1H9zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4zm10 5.5h1v-3h-1z"/></svg>';
+
+    pdfEmbedBtn.addEventListener('click', function() {
+      const pdfUrl = cardDiv.getAttribute('option:ajax-delete-row:url');
+      if (pdfUrl && pdfUrl.trim()) {
+        // Try to insert into the active TinyMCE editor if available
+        if (typeof tinymce !== 'undefined') {
+          const editor = tinymce.activeEditor;
+          if (editor) {
+            editor.insertContent('<p class="pdf-embed">' + pdfUrl.trim() + '</p>');
+            return;
+          }
+        }
+        // Fallback for markdown editor: insert [pdf](url) at cursor position
+        const mdText = '[pdf](' + pdfUrl.trim() + ')';
+
+        // CodeMirror 6
+        if (window.mdEditorView) {
+          const view = window.mdEditorView;
+          const sel = view.state.selection.main;
+          view.dispatch(view.state.update({
+            changes: { from: sel.from, to: sel.to, insert: mdText }
+          }));
+          view.focus();
+          return;
+        }
+      }
+    });
+
+    attachmentLinkBtn.parentNode.insertBefore(pdfEmbedBtn, attachmentLinkBtn);
+  }
+
+  function addPdfEmbedButtonsToAttachmentsPdf() {
+    const attachmentLinkBtns = document.querySelectorAll('button[title="Add Attachment Link to Page"]');
+    attachmentLinkBtns.forEach(addPdfEmbedButtonToSidebar);
+  }
+
   // Set pdf.js worker (required for v3+)
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
@@ -236,7 +286,7 @@ function renderPdf(el) {
 
 
 window.addEventListener('DOMContentLoaded', function() {
-  
+  addPdfEmbedButtonsToAttachmentsPdf();
   // Pre-process Markdown Links
   // Finds links rendered from markdown like [pdf](https://...) and transforms them into embed containers
   document.querySelectorAll('.page-content a').forEach(function(link) {
