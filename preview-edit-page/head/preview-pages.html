@@ -127,6 +127,10 @@
         fill: currentColor;
         pointer-events: none;
     }
+
+    .book-contents > a.chapter.entity-list-item.has-children {
+        padding-right: 45px;
+    }
 </style>
 
 <script>
@@ -223,6 +227,128 @@
             container.dispatchEvent(new CustomEvent('preview-container-ready', { bubbles: true }));
         });
 
+
+        // Expand/Collapse All Previews" button
+        // Button appears only after the chapter list is expanded for the first time.
+        const chapterLinks = document.querySelectorAll('.book-contents > a.chapter.entity-list-item[data-entity-type="chapter"]');
+        chapterLinks.forEach(chapterLink => {
+            const expansionDiv = chapterLink.nextElementSibling;
+            if (!expansionDiv || !expansionDiv.classList.contains('chapter-expansion')) return;
+
+            const childPreviews = expansionDiv.querySelectorAll('.page-preview-container');
+            if (childPreviews.length === 0) return;
+
+            const contentsList = expansionDiv.querySelector('.chapter-contents-list');
+            if (!contentsList) return;
+
+            let buttonAdded = false;
+            let allExpanded = false;
+            let expandAllBtn = null;
+
+            function addExpandAllButton() {
+                if (buttonAdded) return;
+                buttonAdded = true;
+
+                expandAllBtn = document.createElement('button');
+                expandAllBtn.className = 'quick-view-btn chapter-expand-all-btn';
+                expandAllBtn.title = 'Expand all previews in this chapter';
+                expandAllBtn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>`;
+                expandAllBtn.style.cssText = 'opacity:1;visibility:visible;position:absolute;right:12px;top:50%;transform:translateY(-50%);z-index:10;';
+
+                chapterLink.style.position = 'relative';
+                chapterLink.appendChild(expandAllBtn);
+
+                expandAllBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const containers = Array.from(expansionDiv.querySelectorAll('.page-preview-container'));
+                    if (containers.length === 0) return;
+
+                    const api = window.BookStackPagePreview || {};
+                    const iconEye = api.iconEye || '';
+                    const iconEyeOff = api.iconEyeOff || '';
+                    const loadPreviewFn = api.loadPreview || null;
+
+                    if (!allExpanded) {
+                        // Expand all.
+                        allExpanded = true;
+                        expandAllBtn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>`;
+                        expandAllBtn.title = 'Collapse all previews in this chapter';
+
+                        containers.forEach(container => {
+                            const previewDiv = container.querySelector('.custom-page-preview');
+                            const viewBtn = container.querySelector('.page-preview-actions .quick-view-btn');
+                            const link = container.querySelector('a.entity-list-item[data-entity-type="page"]');
+                            const url = link ? link.href : null;
+
+                            if (!previewDiv || previewDiv.classList.contains('is-open')) return;
+
+                            previewDiv.classList.add('is-open');
+                            if (viewBtn && iconEyeOff) {
+                                viewBtn.innerHTML = iconEyeOff;
+                                viewBtn.title = 'Hide Preview';
+                            }
+
+                            if (!previewDiv.dataset.previewLoaded && loadPreviewFn && url) {
+                                loadPreviewFn(url, previewDiv);
+                                previewDiv.dataset.previewLoaded = 'true';
+                            }
+                        });
+                    } else {
+                        // Collapse all.
+                        allExpanded = false;
+                        expandAllBtn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>`;
+                        expandAllBtn.title = 'Expand all previews in this chapter';
+
+                        containers.forEach(container => {
+                            const previewDiv = container.querySelector('.custom-page-preview');
+                            const viewBtn = container.querySelector('.page-preview-actions .quick-view-btn');
+
+                            if (!previewDiv || !previewDiv.classList.contains('is-open')) return;
+
+                            // Skip if quick-edit is active.
+                            if (container.querySelector('.quick-edit-textarea')) return;
+
+                            previewDiv.classList.remove('is-open');
+                            if (viewBtn && iconEye) {
+                                viewBtn.innerHTML = iconEye;
+                                viewBtn.title = 'Show Preview';
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Show/hide the expand-all button in sync with the chapter toggle.
+            function updateButtonVisibility() {
+                const isOpen = contentsList.offsetParent !== null;
+                if (isOpen && !buttonAdded) {
+                    addExpandAllButton();
+                }
+                if (expandAllBtn) {
+                    expandAllBtn.style.display = isOpen ? '' : 'none';
+                }
+            }
+
+            // Observe style/class changes on the contents list (and its parent) to react to toggle clicks.
+            const visibilityObserver = new MutationObserver(updateButtonVisibility);
+            visibilityObserver.observe(contentsList, { attributes: true, attributeFilter: ['style', 'class'] });
+
+            const parentEl = contentsList.parentElement;
+            if (parentEl) {
+                visibilityObserver.observe(parentEl, { attributes: true, attributeFilter: ['style', 'class'] });
+            }
+
+            // Also listen directly on the chapter toggle button for immediate response.
+            const toggleBtn = expansionDiv.querySelector('.chapter-contents-toggle');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => setTimeout(updateButtonVisibility, 10));
+            }
+
+            // Initial state: if chapter is already open on page load, show button now.
+            updateButtonVisibility();
+        });
 
         document.dispatchEvent(new CustomEvent('preview-pages-ready'));
     });
