@@ -10,6 +10,12 @@ IMPORTANT FIXES APPLIED:
 - Changed .then() to .promise.then() for pdf.js v3+ API
 - Added loading placeholder with spinner animation
 - Added visual styling for the PDF container
+- "Insert PDF" toolbar button now lists existing PDF attachments in a dropdown
+- Pressing Enter at the end of a PDF block now exits to a normal paragraph below it,
+  and pressing Enter at the start pushes the block down onto a new blank line above,
+  instead of cloning the block
+- "Insert PDF" toolbar button is registered into BookStack's existing "insertoverflow"
+  dropdown (next to Insert Horizontal Line, Code Block, etc.) rather than the main bar
 
 CORS: The PDF URL must point to a server that allows cross-origin requests.
 - PDFs hosted on the SAME domain as BookStack will work fine
@@ -158,6 +164,20 @@ CORS: The PDF URL must point to a server that allows cross-origin requests.
     attachmentLinkBtns.forEach(addPdfEmbedButtonToSidebar);
   }
 
+  // Scrapes the page's attachment sidebar for PDF files, returning {text, value} pairs
+  // suitable for a TinyMCE selectbox
+  function getPdfAttachments() {
+    const items = [];
+    document.querySelectorAll('[component="ajax-delete-row"]').forEach(function(card) {
+      const fileName = (card.querySelector('.py-s a')?.textContent || '').trim();
+      const url = card.getAttribute('option:ajax-delete-row:url');
+      if (url && fileName.toLowerCase().endsWith('.pdf')) {
+        items.push({ text: fileName, value: url.trim() });
+      }
+    });
+    return items;
+  }
+
   // Set pdf.js worker (required for v3+)
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
@@ -165,30 +185,89 @@ CORS: The PDF URL must point to a server that allows cross-origin requests.
 
   // Use BookStack editor event to add custom "Insert PDF" button into main toolbar
   window.addEventListener('editor-tinymce::pre-init', event => {
-      const mceConfig = event.detail.config;
-      mceConfig.toolbar = mceConfig.toolbar.replace('link', 'link insertpdf')
+    const mceConfig = event.detail.config;
+    // mceConfig.toolbar = mceConfig.toolbar.replace('link', 'link insertpdf')
+    // console.log('toolbar:', mceConfig.toolbar);
+
+    const originalSetup = mceConfig.setup;
+
+    mceConfig.setup = function(editor) {
+      const originalAddGroupToolbarButton = editor.ui.registry.addGroupToolbarButton.bind(editor.ui.registry);
+      editor.ui.registry.addGroupToolbarButton = function(name, spec) {
+        if (name === 'insertoverflow') {
+          // console.log('insertoverflow items:', spec.items);
+          spec = Object.assign({}, spec, { items: spec.items + ' insertpdf' });
+        }
+        return originalAddGroupToolbarButton(name, spec);
+      };
+      if (originalSetup) originalSetup(editor);
+    };
   });
 
   // Use BookStack editor event to define the custom "Insert PDF" button.
   window.addEventListener('editor-tinymce::setup', event => {
     const editor = event.detail.editor;
+    
+    // Enter at the end drops a normal paragraph below; Enter at the start pushes
+    // the block down onto a new blank line above it.
+    editor.on('keydown', function(e) {
+      if (e.keyCode !== 13 || e.shiftKey) return;
+
+      const block = editor.selection.getNode().closest('p.pdf-embed');
+      if (!block) return;
+
+      e.preventDefault();
+
+      const rng = editor.selection.getRng();
+      const atStart = rng.collapsed && rng.startOffset === 0;
+
+      const newLine = document.createElement('p');
+      newLine.innerHTML = '<br data-mce-bogus="1">';
+      block.parentNode.insertBefore(newLine, atStart ? block : block.nextSibling);
+
+      if (!atStart) editor.selection.setCursorLocation(newLine, 0);
+      editor.nodeChanged();
+    });
 
     // Add PDF insert button
     editor.ui.registry.addButton('insertpdf', {
       tooltip: 'Insert PDF',
       icon: 'document-properties',
       onAction() {
+        const attachments = getPdfAttachments();
+
         editor.windowManager.open({
           title: 'Insert PDF',
           body: {
             type: 'panel',
             items: [
-              {type: 'textarea', name: 'pdfurl', label: 'PDF URL'}
+              {
+                type: 'selectbox',
+                name: 'pdfselect',
+                label: 'Choose Attached PDF',
+                items: [
+                  { text: '-- Select an attached PDF --', value: '' },
+                  ...attachments
+                ]
+              },
+              {type: 'textarea', name: 'pdfurl', label: 'Or enter a PDF URL'}
             ]
           },
           onSubmit: function(e) {
-            // Insert URL as text content (attributes get stripped by BookStack sanitization)
-            editor.insertContent('<p class="pdf-embed">' + e.getData().pdfurl + '</p>');
+            const url = (e.getData().pdfselect || e.getData().pdfurl).trim();
+            if (url) {
+              const currentBlock = editor.selection.getNode().closest('p.pdf-embed');
+              if (currentBlock) {
+                let target = currentBlock.nextSibling;
+                if (!target) {
+                  target = document.createElement('p');
+                  target.innerHTML = '<br data-mce-bogus="1">';
+                  currentBlock.parentNode.appendChild(target);
+                }
+                editor.selection.setCursorLocation(target, 0);
+              }
+              editor.insertContent('<p class="pdf-embed">' + url + '</p><p>&nbsp;</p>');
+            }
             e.close();
           },
           buttons: [
