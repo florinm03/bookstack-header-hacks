@@ -2,7 +2,7 @@ name: Package modules as release assets
 
 on:
   release:
-    types: [published]
+    types: [published, edited]
 
 jobs:
   package:
