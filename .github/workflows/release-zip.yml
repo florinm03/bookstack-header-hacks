@@ -1,0 +1,27 @@
+name: Package modules as release assets
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Zip each module folder
+        run: |
+          mkdir -p dist
+          for dir in */; do
+            name="${dir%/}"
+            # skip hidden/dist dirs
+            [[ "$name" == .* || "$name" == "dist" ]] && continue
+            zip -r "dist/${name}.zip" "$name"
+          done
+
+      - name: Upload assets to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" dist/*.zip --clobber
