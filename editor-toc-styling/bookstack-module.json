@@ -1,0 +1,5 @@
+{
+  "name": "editor-toc-styling",
+  "description": "Clearer styles for the table of contents tab within the editor, improving the hierarchy visibility (added in v26.05)",
+  "version": "1.0.0"
+}
