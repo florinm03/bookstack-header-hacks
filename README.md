@@ -37,6 +37,7 @@ chmod +x setup.sh
 
 | Module | Description | Preview |
 |--------|-------------|---------|
+| [`editor-toc-styling/`](editor-toc-styling/) | Clearer styles for the table of contents tab within the editor, improving the hierarchy visibility (added in v26.05). | ![](pictures/TOC_Styles.png)
 | [`header-anchor-link/`](header-anchor-link/) | Adds clickable anchor links to page headers. Hover over headers to see a link icon. Click to copy the section URL to your clipboard. | ![](pictures/Anchor.png)
 | [`image-gallery/`](image-gallery/) | Adds an image gallery with lightbox viewer. Provides an Insert Gallery button in the WYSIWYG editor to create responsive image grids with fullscreen viewing. | ![](pictures/Gallery.png)
 | [`LaTeX-support/`](LaTeX-support/) | Adds MathJax support for rendering LaTeX mathematical equations. Use `$...$` for inline math. | ![](pictures/LaTeX.png)
@@ -46,7 +47,6 @@ chmod +x setup.sh
 | [`preview-edit-page/`](preview-edit-page/) | Adds a preview button to the page editor, and enables quick-editing pages directly from the preview view. | ![](pictures/Preview.png)
 | [`sort-tables-WYSIWYG/`](sort-tables-WYSIWYG/) | Makes tables sortable in the WYSIWYG editor. Double-click on a column header to sort by that column. |
 | [`sticky-table-heads/`](sticky-table-heads/) | Keeps table headers fixed at the top while scrolling, for tables taller than the viewport. |
-| [`editor-toc-styling/`](editor-toc-styling/) | Clearer styles for the table of contents tab within the editor, improving the hierarchy visibility (added in v26.05). | ![](pictures/TOC_Styles.png)
 | [`url-edit-contrast/`](url-edit-contrast/) | Improves URL highlight visibility in the WYSIWYG editor dark mode with a subtle dashed border. |
 | [`wc-n-wpm-info/`](wc-n-wpm-info/) | Displays word count, character count, and estimated reading time on each page. | ![](pictures/Words.png)
 | [`global-hacks/`](global-hacks/) | Miscellaneous global customizations that apply to all pages. |

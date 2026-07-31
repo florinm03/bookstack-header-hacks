@@ -22,6 +22,7 @@ UNCHECK="[ ]"
 
 # ── Module definitions ────────────────────────
 MODULE_ORDER=(
+  "editor-toc-styling"
   "header-anchor-link"
   "image-gallery"
   "LaTeX-support"
@@ -38,6 +39,7 @@ MODULE_ORDER=(
 )
 
 declare -A MODULE_DESC=(
+  ["editor-toc-styling"]="Clearer styles for editor table of contents tab (v26.05+)"
   ["header-anchor-link"]="Clickable anchor links on page headers"
   ["image-gallery"]="Lightbox image gallery with Insert Gallery button"
   ["LaTeX-support"]="MathJax rendering for LaTeX equations"
@@ -47,7 +49,7 @@ declare -A MODULE_DESC=(
   ["preview-edit-page"]="Preview button and quick-edit from preview"
   ["sort-tables-WYSIWYG"]="Double-click column header to sort tables"
   ["sticky-table-heads"]="Fix table headers while scrolling"
-  ["toc-edit-mode"]="Table of contents in editor sidebar"
+  ["toc-edit-mode"]="Table of contents in editor sidebar (Redundant)"
   ["url-edit-contrast"]="Better URL highlight visibility in dark mode"
   ["wc-n-wpm-info"]="Word count, char count and reading time per page"
   ["global-hacks"]="Miscellaneous global customizations"
@@ -278,3 +280,4 @@ fi
 
 echo ""
 echo -e "${DIM}Installed to: ${DEST_DIR}${RESET}"
+
