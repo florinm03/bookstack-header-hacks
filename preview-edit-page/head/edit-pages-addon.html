@@ -2,6 +2,16 @@
 <!-- Credit: https://github.com/florinm03 -->
 
 <style>
+    :root {
+        --quick-action-color: #888;
+        --quick-action-hover-color: #222;
+    }
+    
+    html.dark-mode {
+        --quick-action-color: #999;
+        --quick-action-hover-color: #eee;
+    }
+    
     .page-preview-container .entity-list-item {
         padding-right: 80px;
     }
@@ -10,7 +20,7 @@
         background: transparent;
         border: 1px solid var(--color-border);
         border-radius: 4px;
-        color: var(--color-text-muted);
+        color: var(--quick-action-color);
         cursor: pointer;
         padding: 4px 6px;
         display: flex;
@@ -20,6 +30,10 @@
         opacity: 0;
         visibility: hidden;
         outline: none;
+    }
+
+    html.dark-mode  .quick-edit-btn {
+        color: var(--quick-action-color);
     }
 
     .page-preview-container:not(:has(.custom-page-preview.is-open)):hover .quick-edit-btn {
@@ -33,9 +47,11 @@
     }
 
     .quick-edit-btn:hover {
-        color: var(--color-primary);
-        border-color: var(--color-primary);
-        background: var(--color-lighter);
+        color: var(--quick-action-hover-color);
+    }
+
+    html.dark-mode .quick-edit-btn:hover {
+        color: var(--quick-action-hover-color);
     }
 
     .quick-edit-btn svg {
@@ -49,7 +65,7 @@
         background: transparent;
         border: 1px solid var(--color-border);
         border-radius: 4px;
-        color: var(--color-text-muted);
+        color: var(--quick-action-color);
         cursor: pointer;
         padding: 4px 6px;
         display: flex;
@@ -72,9 +88,7 @@
     }
 
     .quick-cancel-btn:hover {
-        color: var(--color-primary);
-        border-color: var(--color-primary);
-        background: var(--color-lighter);
+        color: var(--quick-action-hover-color);
     }
 
     .quick-cancel-btn svg {

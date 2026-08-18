@@ -2,6 +2,16 @@
 <!-- Credit: https://github.com/florinm03 -->
 
 <style>
+    :root {
+        --quick-action-color: #888;
+        --quick-action-hover-color: #222;
+    }
+    
+    html.dark-mode {
+        --quick-action-color: #999;
+        --quick-action-hover-color: #eee;
+    }
+    
     .page-preview-container {
         position: relative;
         border: 1px solid var(--color-border);
@@ -94,7 +104,6 @@
         background: transparent;
         border: 1px solid var(--color-border);
         border-radius: 4px;
-        color: #ccc;
         cursor: pointer;
         padding: 4px 6px;
         display: flex;
@@ -106,6 +115,36 @@
         outline: none;
     }
 
+    .page-preview-container .quick-view-btn,
+    .quick-view-btn.title-action {
+        color: var(--quick-action-color);
+        transition: color 0.2s ease;
+    }
+    
+    .page-preview-container .quick-view-btn:hover,
+    .quick-view-btn:hover {
+        color: var(--quick-action-hover-color);
+    }
+    
+    html.dark-mode .page-preview-container .quick-view-btn,
+    html.dark-mode .quick-view-btn {
+        color: var(--quick-action-color);
+    }
+    
+    html.dark-mode .page-preview-container .quick-view-btn:hover,
+    html.dark-mode .quick-view-btn:hover {
+        color: var(--quick-action-hover-color);
+    }
+
+    .chapter-expand-all-btn {
+        color: var(--quick-action-color);
+        transition: color 0.2s ease;
+    }
+
+    .chapter-expand-all-btn:hover {
+        color: var(--quick-action-hover-color);
+    }
+ 
     .page-preview-container:not(:has(.custom-page-preview.is-open)):hover .quick-view-btn {
         opacity: 1;
         visibility: visible;
