@@ -1,0 +1,33 @@
+<!-- Hack: shelf, book and chapter statistics (book/chapter/page counts) -->
+<!-- Credit: https://github.com/Vlad118 -->
+ 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const isShelf = window.location.pathname.startsWith('/shelves/');
+  const root = document.querySelector('.book-content, .chapter-content');
+  const title = root && root.closest('main') && root.closest('main').querySelector('h1');
+  if (!title) return;
+
+  const count = sel => new Set(Array.from(root.querySelectorAll(sel)).map(a => a.href)).size;
+  const plural = (n, word) => n + ' ' + word + (n === 1 ? '' : 's');
+
+  let parts;
+  if (isShelf) {
+    const books = count('a.grid-card[data-entity-type="book"]');
+    parts = [plural(books, 'book')];
+  } else {
+    const pages = count('a.entity-list-item[data-entity-type="page"]');
+    const chapters = count('a.entity-list-item[data-entity-type="chapter"]');
+    parts = root.classList.contains('book-content')
+      ? [plural(chapters, 'chapter'), plural(pages, 'page')]
+      : [plural(pages, 'page')];
+  }
+
+  const el = document.createElement('div');
+  el.style = 'font-size: 0.85em; color: #6b778c; margin: -10px 0 20px;';
+  el.textContent = parts.join(' • ');
+
+  const headerRow = title.closest('.flex-container-row');
+  (headerRow || title).after(el);
+});
+</script>

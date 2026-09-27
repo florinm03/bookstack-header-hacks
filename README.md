@@ -48,7 +48,7 @@ chmod +x setup.sh
 | [`sort-tables-WYSIWYG/`](sort-tables-WYSIWYG/) | Makes tables sortable in the WYSIWYG editor. Double-click on a column header to sort by that column. |
 | [`sticky-table-heads/`](sticky-table-heads/) | Keeps table headers fixed at the top while scrolling, for tables taller than the viewport. |
 | [`url-edit-contrast/`](url-edit-contrast/) | Improves URL highlight visibility in the WYSIWYG editor dark mode with a subtle dashed border. |
-| [`wc-n-wpm-info/`](wc-n-wpm-info/) | Displays word count, character count, and estimated reading time on each page. | ![](pictures/Words.png)
+| [`content-stats-info/`](content-stats-info/) | Displays word count, character count, and estimated reading time on pages; displays page and chapter counts on books and chapters; displays book count on shelves. | ![](pictures/Words.png) ![](pictures/Book_Stats.png)
 | [`global-hacks/`](global-hacks/) | Miscellaneous global customizations that apply to all pages. |
 
 ### Redundant/Outdated Modules
