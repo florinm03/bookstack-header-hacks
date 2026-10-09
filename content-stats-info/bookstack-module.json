@@ -1,0 +1,5 @@
+{
+  "name": "content-stats-info",
+  "description": "Displays word count/read time on pages; chapter/page counts on books/chapters; book count on shelves",
+  "version": "1.1.0"
+}
