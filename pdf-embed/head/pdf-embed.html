@@ -371,7 +371,7 @@ window.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.page-content a').forEach(function(link) {
     let linkText = link.textContent.trim().toLowerCase();
     
-    if (linkText === 'pdf' || linkText === 'embed-pdf') {
+    if (linkText === 'embed-pdf') {
       let embedContainer = document.createElement('p');
       embedContainer.className = 'pdf-embed';
       embedContainer.textContent = link.href; // Extract the URL
